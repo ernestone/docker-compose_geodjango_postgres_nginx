@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+{% extends "admin/base.html" %}
+
+{% load leaflet_tags %}
+
+{% block extrahead %}
+    {{ block.super }}
+
+    {% leaflet_js %}
+    {% leaflet_css %}
+    <style>
+        .leaflet-container {
+            height: 650px;
+        }
+    </style>
+    <script>
+        function style(feature) {
+            return {
+                fillColor: feature.properties.colour,
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
+
+
+        function add_obj_geoJson(data, map) {
+            var gJson = L.geoJson(data, {
+                onEachFeature: function onEachFeature(feature, layer) {
+                    var props = feature.properties;
+                    var content = `<h3>${props.name}</h3><p>${props.code}</p><p>${props.name_iso_country}</p><p>${props.code_iso3_country}</p>`;
+                    layer.bindPopup(content);
+                },
+                style: style
+            })
+            gJson.addTo(map);
+
+            return gJson;
+        }
+
+        function add_data_layer(event, dataurl, bounds = false) {
+            var map = event.detail.map;
+            var gJson;
+            // Download GeoJSON data with Ajax
+            fetch(dataurl)
+                .then(function (resp) {
+                    return resp.json();
+                })
+                .then(function (data) {
+                    return add_obj_geoJson(data, map);
+                })
+                .then(function (gJson) {
+                        if (bounds) {
+                            map.fitBounds(gJson.getBounds());
+                        }
+                    }
+                );
+        }
+
+        var gjson_countries = '{% url "country-list" %}';
+
+        window.addEventListener("map:init", function (event) {
+            add_data_layer(event, gjson_countries, true);
+        });
+    </script>
+    <title>map_sample</title>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <h1>Map Sample</h1>
+    {% leaflet_map "main" %}
+{% endblock %}

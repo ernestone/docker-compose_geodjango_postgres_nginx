@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/data/sample_data/countries.csv" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/data/sincro_data/Clientes.txt" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/data/sincro_data/L001.txt" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/data/sincro_data/M001.txt" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/data/sincro_data/P001.txt" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/data/sincro_data/masttype.csv" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/data/sincro_data/region.csv" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/data/sincro_data/test_remove/masttype.csv" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/data/sincro_data/test_remove/region.csv" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/data/sincro_data_old/P001.txt" charset="windows-1252" />
+  </component>
+</project>

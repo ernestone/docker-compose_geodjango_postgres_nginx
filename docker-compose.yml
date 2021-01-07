@@ -1,0 +1,35 @@
+version: '3.4'
+
+x-sample_base_app: &sample_base_app
+  build:
+    context: .
+    args:
+      - DJANGO_ENV=dev
+  env_file:
+    - .env.dev
+  volumes:
+    - .:/opt/project
+    - ./data/logs:/vol/data/logs
+    - ./data/sample_data:/vol/data/load_dir
+  depends_on:
+    - db
+
+services:
+  sample_app:
+    <<: *sample_base_app
+    container_name: sample_app
+    ports:
+      - "8000:8000"
+
+  db:
+    image: kartoza/postgis
+    container_name: db_postgis_sample
+    env_file:
+      - .env.dev
+    ports:
+      - 25432:5432
+    volumes:
+      - db_postgis_vol:/var/lib/postgresql
+
+volumes:
+  db_postgis_vol:

@@ -1,0 +1,12 @@
+{% load i18n %}{% autoescape off %}
+{% blocktranslate %}Está recibiendo este mail porque ha sido dado de alta en {{ site_name }}.{% endblocktranslate %}
+
+{% translate "Please go to the following page and choose a new password:" %}
+{% block reset_link %}
+{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
+{% endblock %}
+{% translate 'Su usuario es el mail:' %} {{ user.get_username }}
+
+{% blocktranslate %}The {{ site_name }} team{% endblocktranslate %}
+
+{% endautoescape %}

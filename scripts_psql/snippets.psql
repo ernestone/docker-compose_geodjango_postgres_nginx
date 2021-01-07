@@ -1,0 +1,6 @@
+\dx # para ver extensiones instaladas
+
+SELECT version(); # para ver version instalada de postgres
+
+# Per modificar una configuració prévia utilitzar ALTER
+ALTER SERVER oradb_iminexus OPTIONS ( SET dbserver 'DSV1.WORLD');

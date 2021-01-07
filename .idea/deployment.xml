@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="Nexus-Windtec" uploadOnCheckin="ed784e5f-4502-4960-911e-bc9b832c4d11" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="Nexus-Windtec">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/opt/windtec" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/.idea" />
+            <excludedPath local="true" path="$PROJECT_DIR$/data" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myUploadOnCheckinName" value="Nexus-Windtec" />
+  </component>
+</project>

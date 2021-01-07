@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" host="192.168.0.54" id="7c82ab09-ba94-4536-bfb1-9ba0bf19e2b2" port="22" customName="Nexus_WINDTEC(root@192.168.0.54:22)" nameFormat="CUSTOM" username="root">
+        <option name="customName" value="Nexus_WINDTEC(root@192.168.0.54:22)" />
+      </sshConfig>
+    </configs>
+  </component>
+</project>

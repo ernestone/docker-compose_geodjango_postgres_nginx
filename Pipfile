@@ -1,0 +1,32 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+django-cors-headers = "*"
+
+[packages]
+django = "~=3.1"
+psycopg2-binary = "~=2.8"
+django-leaflet = "~=0.27"
+django-geojson = "*"
+djangorestframework = "~=3.12"
+djangorestframework-gis = "==0.16"
+djangorestframework-simplejwt = "~=4.4"
+django-simple-history = "*"
+django-filter = "*"
+gunicorn = "*"
+fire = "*"
+openpyxl = "*"
+jellyfish = "*"
+pyyaml = "*"
+xlrd = "*"
+pycountry = "*"
+countryinfo = "*"
+palettable = "*"
+overpy = "*"
+
+[requires]
+python_version = "3.8"

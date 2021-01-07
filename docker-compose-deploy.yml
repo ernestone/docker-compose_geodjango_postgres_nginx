@@ -1,0 +1,63 @@
+version: '3.4'
+
+x-sample_base_app: &sample_base_app
+  build:
+    context: .
+    args:
+      - DJANGO_ENV=prod
+  volumes:
+    - .:/opt/project
+    - static_data:/vol/web
+    - ./data/logs:/vol/data/logs
+    - ./data/sample_data:/vol/data/load_dir
+  environment:
+    - SECRET_KEY=samplekey123
+    - ALLOWED_HOSTS=0.0.0.0,localhost,127.0.0.1
+    - DEBUG=0
+    - POSTGRES_HOST=db
+    - POSTGRES_PORT=5432
+    - POSTGRES_USER=adm_db
+    - POSTGRES_PASS=adm_db_123
+    - POSTGRES_DBNAME=sample
+    - POSTGRES_SCHEMA=sample
+    - EMAIL_HOST=smtp.nexusgeographics.com
+    - DEFAULT_FROM_EMAIL=sample@nexusgeographics.com
+    - EMAIL_PORT=25
+    - EMAIL_HOST_USER=sample@nexusgeographics.com
+    - EMAIL_HOST_PASSWORD=XXXXXXXX
+    - GUNICORN_TIMEOUT=600
+  depends_on:
+    - db
+
+services:
+  sample_app_deployed:
+    <<: *sample_base_app
+    container_name: sample_app_deployed
+    expose:
+      - 8000
+
+  proxy:
+    build:
+      context: ./nginx
+    volumes:
+      - static_data:/vol/static
+    ports:
+      - "8080:80"
+    depends_on:
+      - sample_app_deployed
+
+  db:
+    image: kartoza/postgis
+    container_name: db_postgis_sample
+    environment:
+      - POSTGRES_USER=adm_db
+      - POSTGRES_PASS=adm_db_123
+      - POSTGRES_DBNAME=sample
+    ports:
+      - 25432:5432
+    volumes:
+      - db_postgis_vol:/var/lib/postgresql
+
+volumes:
+  db_postgis_vol:
+  static_data:
