@@ -5,12 +5,12 @@
 #  Copyright (c)
 
 from rest_framework.serializers import SerializerMethodField
-from rest_framework_gis.serializers import GeoFeatureModelSerializer, ModelSerializer
+from django_utils.serializers import DynamicFieldsGeoModelSerializer, DynamicFieldsModelSerializer
 
 from .models import Country, CatalogColour
 
 
-class CatelogColourSerializer(ModelSerializer):
+class CatalogColourSerializer(DynamicFieldsModelSerializer):
     """ Class serializer for CatalogColour """
 
     class Meta:
@@ -18,7 +18,7 @@ class CatelogColourSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class CountrySerializer(GeoFeatureModelSerializer):
+class BorderCountrySerializer(DynamicFieldsGeoModelSerializer):
     """ Clase serializador Country """
     colour = SerializerMethodField()
 
@@ -29,3 +29,12 @@ class CountrySerializer(GeoFeatureModelSerializer):
 
     def get_colour(self, obj):
         return obj.colour.hex
+
+
+class BboxCountrySerializer(DynamicFieldsGeoModelSerializer):
+    """ Clase serializador Country """
+
+    class Meta:
+        model = Country
+        geo_field = 'bbox'
+        fields = ('id', 'code', 'name')

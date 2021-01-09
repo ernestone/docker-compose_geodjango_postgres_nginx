@@ -7,7 +7,7 @@ from rest_framework.fields import BooleanField, SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from sample_admin_app.models import UserSample
-from sample_app.serializers import CountrySerializer
+from sample_app.serializers import BboxCountrySerializer
 
 
 class UserSampleSerializer(ModelSerializer):
@@ -16,7 +16,7 @@ class UserSampleSerializer(ModelSerializer):
     countries = SerializerMethodField()
 
     def get_countries(self, user):
-        return CountrySerializer(user.get_countries(), many=True).data
+        return BboxCountrySerializer(user.get_countries(), many=True, fields=('id', 'code', 'name')).data
 
     class Meta:
         model = UserSample
@@ -25,6 +25,9 @@ class UserSampleSerializer(ModelSerializer):
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """
+
+    """
     def get_token(self, user):
         token = super().get_token(user)
 

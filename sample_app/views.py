@@ -4,6 +4,7 @@ from django_filters import FilterSet
 from djgeojson.views import GeoJSONLayerView
 from rest_framework import viewsets
 
+from sample_app.serializers import BorderCountrySerializer, CatalogColourSerializer
 from django_utils.auth_decorators import conditional_login_required
 from django_utils import get_fields_model
 
@@ -38,7 +39,7 @@ class CountryFilterSet(FilterSet):
 
 class CountryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Country.objects.all()
-    serializer_class = CountrySerializer
+    serializer_class = BorderCountrySerializer
     filterset_class = CountryFilterSet
 
     def get_queryset(self):
@@ -49,6 +50,7 @@ class CountryViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class CatalogColourViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = CatalogColourSerializer
     queryset = CatalogColour.objects.all()
     serializer_class = CatelogColourSerializer
     
