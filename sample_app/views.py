@@ -1,20 +1,28 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import TemplateView
+from django.shortcuts import render
 from django_filters import FilterSet
 from djgeojson.views import GeoJSONLayerView
 from rest_framework import viewsets
 
-from sample_app.models import Country, CatalogColour
-from sample_app.serializers import CountrySerializer, CatelogColourSerializer
+from django_utils.auth_decorators import conditional_login_required
 from django_utils import get_fields_model
 
 
 # Vistas TEMPLATE
-class MapView(LoginRequiredMixin, TemplateView):
-    login_url = 'login'
-    redirect_field_name = 'next'
-    redirect_authenticated_user = True
-    extra_context = {'next': 'map'}
+@conditional_login_required(
+    login_url='login',
+    redirect_field_name='next'
+)
+def map_view(request):
+    """
+
+    Args:
+        request:
+
+    Returns:
+        HttpResponse
+    """
+    return render(request, 'map.html')
 
 
 # Vistas REST-FRAMEWORK
@@ -45,7 +53,8 @@ class CatalogColourViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CatelogColourSerializer
     
 
-# Vistas GEOJSONLAYER
+# Vistas GEOJSONLAYER ()
+# !!!ATENTION!!! NO USADA EN EL SAMPLE - SOLO EJ. A MODO DEMO EN DEBUG
 class BaseGeo(LoginRequiredMixin, GeoJSONLayerView):
     login_url = 'login'
     redirect_field_name = 'redirect_to'

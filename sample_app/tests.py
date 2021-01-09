@@ -1,6 +1,7 @@
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 
+from django_base.settings import AUTH_ACTIVATED
 from sample_admin_app.models import UserSample
 from sample_app.load_data import load_file_sincro_colours, load_file_sincro_countries, load_geojson_countries
 from sample_app.management.commands.load_data_dir import load_data
@@ -9,6 +10,8 @@ from sample_app.views import CountryViewSet
 
 
 # Create your tests here.
+SAMPLE_PSW = 'sample_123zxc'
+SAMPLE_MAIL = 'sample@mail.com'
 
 
 class LoadDataSampleTestCase(TestCase):
@@ -41,6 +44,8 @@ class RestViewsTestCase(TestCase):
     factory = APIRequestFactory()
 
     def setUp(self):
+        if AUTH_ACTIVATED and not UserSample.objects.exists():
+            UserSample.objects.create_superuser(email=SAMPLE_MAIL, password=SAMPLE_PSW)
         if not Country.objects.exists():
             load_file_sincro_countries()
 
@@ -49,8 +54,9 @@ class RestViewsTestCase(TestCase):
 
 
 def resp_for_country(id_country):
-    user = UserSample.objects.get(email='sample@nexusgeographics.com')
+    user = UserSample.objects.get(email=SAMPLE_MAIL)
     view = CountryViewSet.as_view({'get': 'list'})
     req = APIRequestFactory().get(f'/rest/countries/{id_country}', format='application/json')
-    force_authenticate(req, user=user)
+    if AUTH_ACTIVATED:
+        force_authenticate(req, user=user)
     return view(req)

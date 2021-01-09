@@ -7,7 +7,7 @@ from django.urls import path, include
 from rest_framework import routers
 
 from django_base.settings import DEBUG
-from .views import MapView, CountryViewSet, CatalogColourViewSet, MapLayerCountries
+from .views import map_view, CountryViewSet, CatalogColourViewSet, MapLayerCountries
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
@@ -23,9 +23,9 @@ if DEBUG:
     urlpatterns.extend(
         [
             # Vistas GEOJSON via
-            path(r'countries.geojson', MapLayerCountries.as_view(), name='countries'),
+            path(r'countries.geojson', MapLayerCountries.as_view(), name='countries_geojson'),
 
             # Vistas django-templates MAPA
-            path(r'map/', MapView.as_view(template_name='map.html'), name='map'),
+            path(r'map/', map_view, name='map'),
         ]
     )
