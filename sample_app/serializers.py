@@ -18,6 +18,13 @@ class CatalogColourSerializer(DynamicFieldsModelSerializer):
         fields = '__all__'
 
 
+class CountrySerializer(DynamicFieldsModelSerializer):
+    """ Clase serializador Country """
+    class Meta:
+        model = Country
+        exclude = ('border', 'bbox')
+
+
 class BorderCountrySerializer(DynamicFieldsGeoModelSerializer):
     """ Clase serializador Country """
     colour = SerializerMethodField()
@@ -25,7 +32,7 @@ class BorderCountrySerializer(DynamicFieldsGeoModelSerializer):
     class Meta:
         model = Country
         geo_field = 'border'
-        fields = '__all__'
+        fields = ('id', 'code', 'name', 'colour', 'name_iso_country', 'code_iso3_country')
 
     def get_colour(self, obj):
         return obj.colour.hex
