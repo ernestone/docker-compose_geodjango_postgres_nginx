@@ -65,6 +65,12 @@ class UserSample(AbstractUser):
 
         return super(UserSample, self).save()
 
+    def get_countries(self):
+        if self.is_admin:
+            return Country.objects.all()
+        else:
+            return self.countries
+
     class Meta:
         db_table = 'user_sample'
         verbose_name_plural = 'Users Sample'
