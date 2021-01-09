@@ -11,8 +11,9 @@ from .views import map_view, CountryViewSet, CatalogColourViewSet, MapLayerCount
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-router.register(r'countries', CountryViewSet)
-router.register(r'colours', CatalogColourViewSet)
+# Al basename se le añadirá sufijo "-list" o "-detail" según que vista se quiera utilizar
+router.register(r'countries', CountryViewSet, basename='rest_country_view_set')
+router.register(r'colours', CatalogColourViewSet, basename='rest_cat_colours_view_set')
 
 urlpatterns = [
     # Vistas DATA API REST-FRAMEWORK
