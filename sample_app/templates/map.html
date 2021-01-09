@@ -59,7 +59,7 @@
                 );
         }
 
-        var gjson_countries = '{% url "rest_country_view_set-list" %}';
+        var gjson_countries = '{% url "rest_border_country_view_set-list" %}';
 
         window.addEventListener("map:init", function (event) {
             add_data_layer(event, gjson_countries, true);

@@ -3,10 +3,13 @@ from django.shortcuts import render
 from django_filters import FilterSet
 from djgeojson.views import GeoJSONLayerView
 from rest_framework import viewsets
+from rest_framework.filters import SearchFilter
 
-from sample_app.serializers import BorderCountrySerializer, CatalogColourSerializer
+from sample_app.serializers import CountrySerializer, BorderCountrySerializer, BboxCountrySerializer, \
+    CatalogColourSerializer
 from django_utils.auth_decorators import conditional_login_required
 from django_utils import get_fields_model
+from sample_app.models import Country, CatalogColour
 
 
 # Vistas TEMPLATE
@@ -27,32 +30,55 @@ def map_view(request):
 
 
 # Vistas REST-FRAMEWORK
-class CountryFilterSet(FilterSet):
-    """ Class filter for Countries """
-
-    class Meta:
-        model = Country
-        fields = {'id': ['exact', 'in'],
-                  'code': ['exact', 'in'],
-                  'name': ['exact', 'in']}
-
-
 class CountryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Country.objects.all()
-    serializer_class = BorderCountrySerializer
-    filterset_class = CountryFilterSet
+    serializer_class = CountrySerializer
+    filter_backends = [SearchFilter]
+    # Al usar SearchFilter con Postgres se puede utilizar 'Full text search' o 'tsvector + tsquery'
+    # Mirar doc en 'https://docs.djangoproject.com/en/3.1/ref/contrib/postgres/search/'
+    # Para definir tipos de busqueda según campo mirar 'https://www.django-rest-framework.org/api-guide/filtering/#searchfilter'
+    search_fields = ('=code', '@name', '@name_iso_country', '=code_iso3_country',
+                     #'@wikidata__descriptions__en__value', #TODO search wiki document
+                     '@economy', '@income_grp', '@continent', '@region_un', '@subregion', '@region_wb')
 
     def get_queryset(self):
         return super(CountryViewSet, self).get_queryset()
 
-    def get_serializer_class(self):
-        return super(CountryViewSet, self).get_serializer_class()
+
+class BorderCountryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Country.objects.all()
+    serializer_class = BorderCountrySerializer
+    filter_backends = [SearchFilter]
+    # Al usar SearchFilter con Postgres se puede utilizar 'Full text search' o 'tsvector + tsquery'
+    # Mirar doc en 'https://docs.djangoproject.com/en/3.1/ref/contrib/postgres/search/'
+    # Para definir tipos de busqueda según campo mirar 'https://www.django-rest-framework.org/api-guide/filtering/#searchfilter'
+    search_fields = ('=code', '@name', '@name_iso_country', '=code_iso3_country')
+
+
+class BboxCountryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Country.objects.all()
+    serializer_class = BboxCountrySerializer
+    filter_backends = [SearchFilter]
+    # Al usar SearchFilter con Postgres se puede utilizar 'Full text search' o 'tsvector + tsquery'
+    # Mirar doc en 'https://docs.djangoproject.com/en/3.1/ref/contrib/postgres/search/'
+    # Para definir tipos de busqueda según campo mirar 'https://www.django-rest-framework.org/api-guide/filtering/#searchfilter'
+    search_fields = ('=code', '@name')
+
+
+class CatColourFilterSet(FilterSet):
+    """ Class filter for Colours """
+
+    class Meta:
+        model = CatalogColour
+        fields = {'id': ['exact', 'in'],
+                  'hex': ['exact', 'in'],
+                  'name': ['exact', 'in', 'icontains']}
 
 
 class CatalogColourViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CatalogColourSerializer
     queryset = CatalogColour.objects.all()
-    serializer_class = CatelogColourSerializer
+    filterset_class = CatColourFilterSet
     
 
 # Vistas GEOJSONLAYER ()

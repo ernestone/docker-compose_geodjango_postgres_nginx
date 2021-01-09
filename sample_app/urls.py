@@ -7,12 +7,15 @@ from django.urls import path, include
 from rest_framework import routers
 
 from django_base.settings import DEBUG
-from .views import map_view, CountryViewSet, CatalogColourViewSet, MapLayerCountries
+from .views import map_view, CountryViewSet, BorderCountryViewSet, BboxCountryViewSet, \
+    CatalogColourViewSet, MapLayerCountries
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 # Al basename se le añadirá sufijo "-list" o "-detail" según que vista se quiera utilizar
 router.register(r'countries', CountryViewSet, basename='rest_country_view_set')
+router.register(r'border_countries', BorderCountryViewSet, basename='rest_border_country_view_set')
+router.register(r'bbox_countries', BboxCountryViewSet, basename='rest_bbox_country_view_set')
 router.register(r'colours', CatalogColourViewSet, basename='rest_cat_colours_view_set')
 
 urlpatterns = [
