@@ -165,20 +165,6 @@ LOGOUT_URL = reverse_lazy('logout')
 # Extra setting para URL relativa para login externo por JWT Token
 JWT_TOKEN_LOGIN_URL = os.getenv('JWT_TOKEN_LOGIN_URL', reverse_lazy('map') if DEBUG else reverse_lazy('admin/login'))
 
-# Settings para rest-framework
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend'
-    ]
-}
-
 # Custom AUTH_USER (Recomendable siempre aunque no se modifique nada)
 AUTH_USER_MODEL = 'sample_admin_app.UserSample'
 
@@ -195,40 +181,58 @@ else:
 # Fixture data (data que se cargará cada vez que se ejecute "python manage.py loaddata <fixture_nama>(OPC)"
 FIXTURE_DIRS = [os.path.join(BASE_DIR, 'fixture_data')]
 
-# Settings para JWT_TOKEN
-from datetime import timedelta
-
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=int(os.getenv('ACCESS_TOKEN_LIFETIME', 5))),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
-
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'AUDIENCE': None,
-    'ISSUER': None,
-
-    'AUTH_HEADER_TYPES': ('Token',),
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
-
-    'JTI_CLAIM': 'jti',
-
-    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+# Settings para rest-framework FILTERS
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ]
 }
+
+AUTH_ACTIVATED = bool(int(os.getenv('AUTH_ACTIVATED', '0')))
+print(f"AUTH_ACTIVATED = {AUTH_ACTIVATED}")
+if AUTH_ACTIVATED:
+    # Settings para AUTH rest-framework
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = [
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
+            'rest_framework.authentication.SessionAuthentication',
+        ]
+    REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = [
+            'rest_framework.permissions.IsAuthenticated',
+        ]
+
+    # Settings para JWT_TOKEN
+    from datetime import timedelta
+
+    SIMPLE_JWT = {
+        'ACCESS_TOKEN_LIFETIME': timedelta(minutes=int(os.getenv('ACCESS_TOKEN_LIFETIME', 5))),
+        'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+        'ROTATE_REFRESH_TOKENS': False,
+        'BLACKLIST_AFTER_ROTATION': True,
+
+        'ALGORITHM': 'HS256',
+        'SIGNING_KEY': SECRET_KEY,
+        'VERIFYING_KEY': None,
+        'AUDIENCE': None,
+        'ISSUER': None,
+
+        'AUTH_HEADER_TYPES': ('Token',),
+        'USER_ID_FIELD': 'id',
+        'USER_ID_CLAIM': 'user_id',
+
+        'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+        'TOKEN_TYPE_CLAIM': 'token_type',
+
+        'JTI_CLAIM': 'jti',
+
+        'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+        'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+        'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    }
 
 # Settings LOGGING
 ADMINS = [(*adm.split(':'),)
           for adm in os.getenv('MAILS_ADMINS',
-                               'Xavier Prat: xprat@nexusgeographics.com,'
-                               'Ernesto Arredondo: earredondo@nexusgeographics.com').split(',')]
+                               'Sample User: sample@mail.com').split(',')]
 
 DEFAULT_EXCEPTION_REPORTER = 'sample_admin_app.log.CustomExceptionReporter'
 
