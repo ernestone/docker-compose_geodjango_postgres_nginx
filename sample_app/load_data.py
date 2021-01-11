@@ -6,10 +6,12 @@
 import os
 import sys
 from logging import getLogger
+import wikipediaapi
 
 from django.contrib.gis.gdal import DataSource
 from django.contrib.gis.geos import Polygon
 from django.db.models import Q, ProtectedError
+from django.utils.translation import get_language
 
 from common_utils.misc import rows_csv, first_num_from_str, brewer_colour, json_from_url
 from django_base import settings
@@ -17,7 +19,8 @@ from sample_app.models import get_or_set_country, get_or_set_colour, Country, Ca
 
 URL_JSON_WIKI_COUNTRY = 'https://www.wikidata.org/w/api.php?' \
                         'action=wbgetentities&ids={id_country}&' \
-                        'props=aliases|descriptions&languages=en|es|ca&format=json'
+                        'props=aliases|descriptions|sitelinks&sitefilter={language}wiki&' \
+                        'languages={language}&format=json'
 
 TEMP_NOM_PROC_SINCRO = 'sincronización de {n_obj} (fichero={file_name})'
 LOGGER = getLogger('sample.logs')
@@ -127,17 +130,31 @@ def load_geojson_countries(path_geojson=PATH_GEOJSON_COUNTRIES):
     feat_iso2 = lambda f: iso2 if (iso2 := f.get('ISO_A2')) and iso2 != '-99' else f.get('WB_A2')
     feat_iso3 = lambda f: iso3 if (iso3 := f.get('ISO_A3_EH')) and iso3 != '-99' else f.get('WB_A3')
 
+    code_lang, region_lang = get_language().split('-')
+    wiki_en = wikipediaapi.Wikipedia()
+    wiki_lang = wikipediaapi.Wikipedia(code_lang)
+
     for feat in (f for f in lyr if feat_iso2(f) != '-99'):
         cat_colour, created = get_or_set_colour(*brewer_colour(feat.get('MAPCOLOR9'), number=9))
 
+        wikidata_id = feat.get('WIKIDATAID')
+        wikidata = json_from_url(URL_JSON_WIKI_COUNTRY.format(id_country=wikidata_id,
+                                                              language=code_lang))
+        site_links = next(iter(wikidata.get('entities', {}).get(wikidata_id, {}).get('sitelinks', {}).values()), {})
+        name_country = site_links.get('title', name_en := feat.get('NAME_EN'))
+        wiki_page_country = wiki_lang.page(name_country)
+        if not wiki_page_country.exists():
+            wiki_page_country = wiki_en.page(name_en)
+
         country, created = get_or_set_country(
             code_country=feat_iso2(feat),
-            name_country=feat.get('NAME_ES'),
+            name_country=name_country,
             pol_border=feat.geom.geos,
             code_iso3_country=feat_iso3(feat),
             name_iso_country=feat.get('NAME'),
             colour=cat_colour,
-            wikidata=json_from_url(URL_JSON_WIKI_COUNTRY.format(id_country=feat.get('WIKIDATAID'))),
+            wikidata=wikidata,
+            wikipedia=wiki_page_country.summary,
             pop_est=feat.get('POP_EST'),
             gdp_md_est=feat.get('GDP_MD_EST'),
             economy=feat.get('ECONOMY'),
@@ -147,7 +164,7 @@ def load_geojson_countries(path_geojson=PATH_GEOJSON_COUNTRIES):
             subregion=feat.get('SUBREGION'),
             region_wb=feat.get('REGION_WB'),
             update=True,
-            idioma='es'
+            idioma='en'
         )
 
         LOGGER.debug(f'Country {country} loaded')

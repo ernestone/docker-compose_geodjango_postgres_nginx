@@ -37,8 +37,7 @@ class CountryViewSet(viewsets.ReadOnlyModelViewSet):
     # Al usar SearchFilter con Postgres se puede utilizar 'Full text search' o 'tsvector + tsquery'
     # Mirar doc en 'https://docs.djangoproject.com/en/3.1/ref/contrib/postgres/search/'
     # Para definir tipos de busqueda según campo mirar 'https://www.django-rest-framework.org/api-guide/filtering/#searchfilter'
-    search_fields = ('=code', '@name', '@name_iso_country', '=code_iso3_country',
-                     #'@wikidata__descriptions__en__value', #TODO search wiki document
+    search_fields = ('=code', '@name', '@name_iso_country', '=code_iso3_country', '@wikipedia',
                      '@economy', '@income_grp', '@continent', '@region_un', '@subregion', '@region_wb')
 
     def get_queryset(self):

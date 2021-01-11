@@ -46,6 +46,7 @@ class CatalogColour(models.Model):
 
 
 class Country(models.Model):
+    """ Countries """
     id = models.AutoField(primary_key=True)
     code = models.CharField(max_length=5, unique=True)
     name = models.CharField(max_length=100, unique=True)
@@ -53,6 +54,8 @@ class Country(models.Model):
     code_iso3_country = models.CharField(max_length=3, unique=True, blank=True, null=True)
 
     wikidata = models.JSONField(blank=True, null=True)
+    wikipedia = models.TextField(blank=True, null=True)
+
     pop_est = models.IntegerField(blank=True, null=True)
     gdp_md_est = models.IntegerField(blank=True, null=True)
     economy = models.CharField(max_length=100, blank=True, null=True)
@@ -193,6 +196,8 @@ def get_or_set_country(code_country=None, name_country=None, pol_border=None, id
 
     if update or created:
         new_vals = extra_atts
+        if name_country:
+            new_vals['name'] = name_country
 
         if pol_border:
             new_vals['border'] = get_multi_polygon(pol_border)

@@ -27,6 +27,7 @@ pycountry = "*"
 countryinfo = "*"
 palettable = "*"
 overpy = "*"
+wikipedia-api = "*"
 
 [requires]
 python_version = "3.8"

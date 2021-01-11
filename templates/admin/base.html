@@ -1,9 +1,16 @@
 {% extends "admin/base.html" %}
 
+{% load i18n static %}
+
 {% block title %}{{ title }} | {{ site_title|default:_('Sample') }}{% endblock %}
 
 {% block branding %}
 <h1 id="site-name"><a href="{% url 'map' %}">{{ site_header|default:_('Sample') }}</a></h1>
 {% endblock %}
 
-{% block nav-global %}{% endblock %}
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">{% translate 'Admin' %}</a>
+        {% if title %} &rsaquo; {{ title }}{% endif %}
+    </div>
+{% endblock %}
