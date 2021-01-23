@@ -18,7 +18,7 @@
       <excludeFolder url="file://$MODULE_DIR$/data" />
       <excludeFolder url="file://$MODULE_DIR$/sent_mails" />
     </content>
-    <orderEntry type="jdk" jdkName="Remote Python 3.8.6 Docker Compose (sample_app at [C:\dev_eam\python\docker_geodjango_postgres_nginx\docker-compose.yml])" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Remote Python 3.8.7 Docker Compose (sample_app at [J:\dev\python\docker_geodjango_postgres_nginx\docker-compose.yml])" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PackageRequirementsSettings">
