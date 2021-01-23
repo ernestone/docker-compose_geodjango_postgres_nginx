@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="Nexus-Windtec" uploadOnCheckin="ed784e5f-4502-4960-911e-bc9b832c4d11" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" serverName="Nexus-Windtec" persistUploadOnCheckin="false" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
       <paths name="Nexus-Windtec">
         <serverdata>
@@ -14,6 +14,5 @@
         </serverdata>
       </paths>
     </serverData>
-    <option name="myUploadOnCheckinName" value="Nexus-Windtec" />
   </component>
 </project>
